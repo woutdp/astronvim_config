@@ -68,6 +68,16 @@ return {
   -- augroups/autocommands and custom filetypes also this just pure lua so
   -- anything that doesn't fit in the normal config locations above can go here
   polish = function()
+    -- Remove trailing whitespace on save
+    vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+      pattern = {"*"},
+      callback = function(ev)
+        cursor = vim.fn.winsaveview()
+        vim.cmd([[%s/\s\+$//e]])
+        vim.fn.winrestview(cursor)
+      end,
+    })
+
     -- Set up custom filetypes
     -- vim.filetype.add {
     --   extension = {
